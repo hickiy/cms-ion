@@ -1,7 +1,7 @@
-import injectConect from './inject_conect.js';
+const inject_conect = require('./inject_conect.js');
 
-export default function (app) {
+module.exports = function (app) {
   // 注入数据库连接
-  app.use(injectConect);
+  app.use(inject_conect);
   // TODO: 全局错误处理
 }

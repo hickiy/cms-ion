@@ -1,6 +1,6 @@
-import dbconnection from '../models/db.js';
+const get_db = require('../models/db.js');
 
-export default async function injectConect(req, res, next) {
-  req._db_ = await dbconnection('test');
+module.exports = function (req, res, next) {
+  req._db_ = get_db('test');
   next();
 }

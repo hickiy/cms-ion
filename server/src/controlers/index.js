@@ -1,5 +1,5 @@
-import file_ctr from './file_ctr/index.js'
+const file_ctr = require('./file_ctr/index.js')
 
-export default function (app) {
+module.exports = function (app) {
   app.use('/file', file_ctr)
 }
