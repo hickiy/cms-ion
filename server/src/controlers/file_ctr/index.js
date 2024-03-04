@@ -1,23 +1,23 @@
 const express = require('express');
 const multer = require('multer');
-const { GridFsStorage } = require('multer-gridfs-storage');
+const { MongoClient, GridFSBucket } = require('mongodb');
 const router = express.Router();
-router.post('/upload', (req, res) => {
-  const storage = new GridFsStorage({
-    db: req._db_, file: (req, file) => {
-      return {
-        filename: 'file_' + Date.now()
-      };
-    }
-  });
-  const upload = multer({ storage }).single('file');
-  upload(req, res, (err) => {
-    if (err) {
-      res.status(400).send('Error uploading file');
-    } else {
-      res.status(200).send('File uploaded');
-    }
-  });
+router.post('/upload', multer().single('file'), (req, res) => {
+  const db = req.db;
+  const bucket = new GridFSBucket(db);
+  const { originalname, buffer } = req.file;
+  const uploadStream = bucket.openUploadStream(originalname);
+  const id = uploadStream.id;
+  uploadStream.end(buffer);
+  res.send({ id });
 })
+
+router.get('/download/:filename', async (req, res) => {
+  const { filename } = req.params;
+  const db = req.db;
+  const bucket = new GridFSBucket(db);
+  const downloadStream = bucket.openDownloadStreamByName(filename);
+  downloadStream.pipe(res);
+});
 
 module.exports = router;
