@@ -4,6 +4,7 @@ const { MongoClient, GridFSBucket } = require('mongodb');
 const router = express.Router();
 router.post('/upload', multer().single('file'), (req, res) => {
   const db = req.db;
+  console.log(db);
   const bucket = new GridFSBucket(db);
   const { originalname, buffer } = req.file;
   const uploadStream = bucket.openUploadStream(originalname);
