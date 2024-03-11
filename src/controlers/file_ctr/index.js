@@ -1,11 +1,15 @@
 const express = require('express');
 const multer = require('multer');
-const { MongoClient, GridFSBucket } = require('mongodb');
+const { GridFSBucket } = require('mongodb');
 const router = express.Router();
-router.post('/upload', multer().single('file'), (req, res) => {
+router.post('/upload', multer().single('file'), async (req, res) => {
   const db = req.db;
-  console.log(db);
-  const bucket = new GridFSBucket(db);
+  if (!db.fs?.files) {
+    await Promise.all([db.createCollection('fs.files'), db.createCollection('fs.chunks')]);
+  }
+  const bucket = new GridFSBucket(db, {
+    bucketName: 'fs',
+  });
   const { originalname, buffer } = req.file;
   const uploadStream = bucket.openUploadStream(originalname);
   const id = uploadStream.id;

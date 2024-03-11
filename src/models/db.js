@@ -1,9 +1,11 @@
 // db.js
 const mongoose = require('mongoose');
 
-const connection = mongoose.createConnection(`mongodb://127.0.0.1:27017/test`, {
+const connection = mongoose.createConnection(`mongodb://127.0.0.1:27017`, {
   // user: user,
   // pass: pass,
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 // 监听连接的事件
@@ -18,9 +20,8 @@ connection.on('error', (err) => {
 
 // 获取连接的函数
 module.exports = function get_db_url(name, user = null, pass = null) {
-  const db = connection.db || connection.useDb(name).db;
+  const db = connection.useDb(name);
   const db_url = `${connection._connectionString}/${name}`;
-
   // 通过返回对象的方式，返回db和db_url
   return { db, db_url };
 }
