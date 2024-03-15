@@ -19,10 +19,8 @@ connection.on('error', (err) => {
 });
 
 // 获取连接的函数
-module.exports = function get_db_url(name, user = null, pass = null) {
+module.exports = function (name, user = null, pass = null) {
   const db = connection.useDb(name);
-  const db_url = `${connection._connectionString}/${name}`;
-  // 通过返回对象的方式，返回db和db_url
-  return { db, db_url };
+  return db;
 }
 
