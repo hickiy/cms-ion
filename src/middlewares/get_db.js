@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const connection = mongoose.createConnection(`mongodb://127.0.0.1:27017`, {
   // user: user,
   // pass: pass,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
 });
 
 // 监听连接的事件
